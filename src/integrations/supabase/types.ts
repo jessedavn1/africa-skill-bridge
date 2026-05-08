@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          badge: string
+          earned_at: string
+          id: string
+          label: string
+          user_id: string
+        }
+        Insert: {
+          badge: string
+          earned_at?: string
+          id?: string
+          label: string
+          user_id: string
+        }
+        Update: {
+          badge?: string
+          earned_at?: string
+          id?: string
+          label?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       chat_messages: {
         Row: {
           content: string
@@ -79,6 +103,66 @@ export type Database = {
         }
         Relationships: []
       }
+      innovation_projects: {
+        Row: {
+          ai_feedback: string | null
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_public: boolean
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_feedback?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_feedback?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      parent_links: {
+        Row: {
+          created_at: string
+          id: string
+          parent_id: string
+          student_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          parent_id: string
+          student_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          parent_id?: string
+          student_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -136,6 +220,66 @@ export type Database = {
         }
         Relationships: []
       }
+      talent_profiles: {
+        Row: {
+          career_paths: Json
+          growth_areas: Json
+          id: string
+          summary: string | null
+          top_talents: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          career_paths?: Json
+          growth_areas?: Json
+          id?: string
+          summary?: string | null
+          top_talents?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          career_paths?: Json
+          growth_areas?: Json
+          id?: string
+          summary?: string | null
+          top_talents?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      talent_signals: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          meta: Json | null
+          signal_type: string
+          user_id: string
+          weight: number
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          meta?: Json | null
+          signal_type: string
+          user_id: string
+          weight?: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          meta?: Json | null
+          signal_type?: string
+          user_id?: string
+          weight?: number
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -171,7 +315,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "teacher" | "student"
+      app_role: "admin" | "teacher" | "student" | "parent"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -299,7 +443,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "teacher", "student"],
+      app_role: ["admin", "teacher", "student", "parent"],
     },
   },
 } as const
