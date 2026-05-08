@@ -137,8 +137,10 @@ function Dashboard() {
             <div className="text-sm text-accent uppercase tracking-widest">Dashboard</div>
             <h1 className="font-display text-3xl sm:text-4xl font-bold">Karibu, {user.email?.split("@")[0]} 👋</h1>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <Link to="/innovation"><Button variant="outline" className="glass border-primary/30"><Rocket className="h-4 w-4 mr-2" />Innovation Hub</Button></Link>
             <Link to="/teacher"><Button variant="outline" className="glass border-primary/30">Teacher tools</Button></Link>
+            <Link to="/parent"><Button variant="outline" className="glass border-primary/30">Parent view</Button></Link>
             <Button variant="ghost" onClick={signOut}><LogOut className="h-4 w-4 mr-2" />Sign out</Button>
           </div>
         </div>
@@ -146,12 +148,13 @@ function Dashboard() {
         <div className="grid sm:grid-cols-3 gap-4">
           <StatCard icon={<Trophy className="h-5 w-5 text-accent" />} label="Total XP" value={totalXp} />
           <StatCard icon={<BookOpen className="h-5 w-5 text-primary" />} label="Lessons" value={totalLessons} />
-          <StatCard icon={<Flame className="h-5 w-5 text-sunset" style={{ color: "var(--sunset)" }} />} label="Best streak" value={maxStreak} />
+          <StatCard icon={<Flame className="h-5 w-5" style={{ color: "var(--sunset)" }} />} label="Best streak" value={maxStreak} />
         </div>
 
         <Tabs defaultValue="tutor" className="w-full">
           <TabsList>
             <TabsTrigger value="tutor">AI Tutor</TabsTrigger>
+            <TabsTrigger value="talents">My Talents</TabsTrigger>
             <TabsTrigger value="progress">Progress</TabsTrigger>
             <TabsTrigger value="goals">Daily goals</TabsTrigger>
           </TabsList>
