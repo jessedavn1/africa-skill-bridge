@@ -9,21 +9,21 @@ export function CTA() {
         <div className="absolute inset-0 pattern-african opacity-20" />
         <div className="relative max-w-2xl mx-auto">
           <h2 className="font-display text-4xl sm:text-5xl font-bold text-primary-foreground leading-tight">
-            Ready to learn what truly matters?
+            Your gift can create opportunities.
           </h2>
           <p className="text-primary-foreground/80 mt-4 text-lg">
-            Join thousands of African learners building practical skills with AI.
+            Discover your talent. Build with technology. Solve real problems. Lead Africa's next chapter.
           </p>
           <div className="flex flex-wrap gap-3 justify-center mt-8">
             <Link to="/auth">
               <Button size="lg" className="bg-background text-foreground hover:bg-background/90 border-0 group">
-                Create free account
+                Discover my talent
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
               </Button>
             </Link>
-            <Link to="/teacher">
+            <Link to="/innovation">
               <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
-                For teachers
+                Innovation Hub
               </Button>
             </Link>
           </div>

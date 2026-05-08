@@ -4,8 +4,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 const nav = [
-  { label: "Features", href: "#features" },
-  { label: "Subjects", href: "#subjects" },
+  { label: "Talents", href: "#talents" },
+  { label: "Innovation", href: "#innovation" },
+  { label: "Future Skills", href: "#future-skills" },
   { label: "Languages", href: "#languages" },
   { label: "AI Tutor", href: "#tutor" },
 ];

@@ -17,9 +17,9 @@ export function Footer() {
         </div>
 
         {[
-          { title: "Learn", items: ["Subjects", "AI Tutor", "Career paths", "Scholarships"] },
-          { title: "For", items: ["Students", "Teachers", "Schools", "Self-learners"] },
-          { title: "Languages", items: ["English", "Français", "Kiswahili", "Kirundi (soon)"] },
+          { title: "Discover", items: ["Talents", "Innovation Hub", "Future Skills", "AI Tutor"] },
+          { title: "For", items: ["Students", "Teachers", "Parents", "Schools"] },
+          { title: "Languages", items: ["English · Français", "Kiswahili · Kinyarwanda", "Kirundi · Lingala", "Yorùbá · isiZulu · Igbo"] },
         ].map((col) => (
           <div key={col.title}>
             <div className="text-sm font-semibold mb-4">{col.title}</div>

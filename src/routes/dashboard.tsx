@@ -4,12 +4,13 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
 import { askTutor } from "@/lib/tutor.functions";
+import { analyzeTalents } from "@/lib/talent.functions";
 import { Header } from "@/components/site/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sparkles, Send, User, Flame, Trophy, BookOpen, LogOut } from "lucide-react";
+import { Sparkles, Send, User, Flame, Trophy, BookOpen, LogOut, Lightbulb, Rocket, Award } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard")({
@@ -40,6 +41,9 @@ function Dashboard() {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [progress, setProgress] = useState<{ subject: string; xp: number; lessons_completed: number; streak: number }[]>([]);
+  const [talentProfile, setTalentProfile] = useState<any>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+  const analyze = useServerFn(analyzeTalents);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/auth" });
@@ -50,7 +54,37 @@ function Dashboard() {
     supabase.from("progress").select("subject,xp,lessons_completed,streak").then(({ data }) => {
       setProgress(data ?? []);
     });
+    supabase.from("talent_profiles").select("*").eq("user_id", user.id).maybeSingle().then(({ data }) => {
+      setTalentProfile(data);
+    });
   }, [user]);
+
+  function subjectToCategory(s: string): string {
+    const m: Record<string, string> = {
+      Mathematics: "problem_solving", Chemistry: "innovation", Physics: "engineering",
+      Biology: "innovation", "Computer Science": "programming", Languages: "communication", Career: "entrepreneurship",
+    };
+    return m[s] ?? "creativity";
+  }
+
+  async function runAnalysis() {
+    if (!user) return;
+    setAnalyzing(true);
+    try {
+      const { data: signals } = await supabase.from("talent_signals").select("category,weight").eq("user_id", user.id);
+      const result = await analyze({ data: { signals: signals ?? [], language } });
+      await supabase.from("talent_profiles").upsert({
+        user_id: user.id,
+        summary: result.summary ?? null,
+        top_talents: result.top_talents ?? [],
+        growth_areas: result.growth_areas ?? [],
+        career_paths: result.career_paths ?? [],
+      }, { onConflict: "user_id" });
+      const { data } = await supabase.from("talent_profiles").select("*").eq("user_id", user.id).maybeSingle();
+      setTalentProfile(data);
+      toast.success("Talent profile updated");
+    } catch (e: any) { toast.error(e.message); } finally { setAnalyzing(false); }
+  }
 
   async function send() {
     if (!input.trim() || sending) return;
@@ -72,6 +106,9 @@ function Dashboard() {
         }, { onConflict: "user_id,subject" });
         const { data } = await supabase.from("progress").select("subject,xp,lessons_completed,streak");
         setProgress(data ?? []);
+        await supabase.from("talent_signals").insert({
+          user_id: user.id, category: subjectToCategory(subject), signal_type: "tutor_question", weight: 2,
+        });
       }
     } catch (e: any) {
       toast.error(e.message ?? "Failed to reach AI tutor");
@@ -100,8 +137,10 @@ function Dashboard() {
             <div className="text-sm text-accent uppercase tracking-widest">Dashboard</div>
             <h1 className="font-display text-3xl sm:text-4xl font-bold">Karibu, {user.email?.split("@")[0]} 👋</h1>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <Link to="/innovation"><Button variant="outline" className="glass border-primary/30"><Rocket className="h-4 w-4 mr-2" />Innovation Hub</Button></Link>
             <Link to="/teacher"><Button variant="outline" className="glass border-primary/30">Teacher tools</Button></Link>
+            <Link to="/parent"><Button variant="outline" className="glass border-primary/30">Parent view</Button></Link>
             <Button variant="ghost" onClick={signOut}><LogOut className="h-4 w-4 mr-2" />Sign out</Button>
           </div>
         </div>
@@ -109,12 +148,13 @@ function Dashboard() {
         <div className="grid sm:grid-cols-3 gap-4">
           <StatCard icon={<Trophy className="h-5 w-5 text-accent" />} label="Total XP" value={totalXp} />
           <StatCard icon={<BookOpen className="h-5 w-5 text-primary" />} label="Lessons" value={totalLessons} />
-          <StatCard icon={<Flame className="h-5 w-5 text-sunset" style={{ color: "var(--sunset)" }} />} label="Best streak" value={maxStreak} />
+          <StatCard icon={<Flame className="h-5 w-5" style={{ color: "var(--sunset)" }} />} label="Best streak" value={maxStreak} />
         </div>
 
         <Tabs defaultValue="tutor" className="w-full">
           <TabsList>
             <TabsTrigger value="tutor">AI Tutor</TabsTrigger>
+            <TabsTrigger value="talents">My Talents</TabsTrigger>
             <TabsTrigger value="progress">Progress</TabsTrigger>
             <TabsTrigger value="goals">Daily goals</TabsTrigger>
           </TabsList>
@@ -167,6 +207,34 @@ function Dashboard() {
             </div>
           </TabsContent>
 
+          <TabsContent value="talents">
+            <div className="glass rounded-3xl p-6 space-y-5">
+              <div className="flex items-end justify-between flex-wrap gap-3">
+                <div>
+                  <h3 className="font-display text-xl font-bold">Your AI talent profile</h3>
+                  <p className="text-xs text-muted-foreground">Built from how you learn, ask, and create. Re-analyze any time.</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">Account ID (share with parent): <span className="font-mono">{user.id}</span></p>
+                </div>
+                <Button onClick={runAnalysis} disabled={analyzing} className="bg-gradient-hero text-primary-foreground border-0">
+                  <Sparkles className="h-4 w-4 mr-2" />{analyzing ? "Analyzing…" : "Analyze my talents"}
+                </Button>
+              </div>
+
+              {!talentProfile && <p className="text-sm text-muted-foreground inline-flex items-center gap-2"><Lightbulb className="h-4 w-4" /> Engage with the tutor and Innovation Hub, then run analysis.</p>}
+
+              {talentProfile && (
+                <div className="space-y-4">
+                  {talentProfile.summary && <p className="italic text-muted-foreground">{talentProfile.summary}</p>}
+                  <div className="grid md:grid-cols-3 gap-3">
+                    <TalentCard icon={<Award className="h-4 w-4" />} title="Top talents" items={talentProfile.top_talents} render={(x: any) => <><b>{x.category}</b> — {x.summary}</>} />
+                    <TalentCard icon={<Lightbulb className="h-4 w-4" />} title="Growth areas" items={talentProfile.growth_areas} render={(x: any) => <><b>{x.category}</b>: {x.why}</>} />
+                    <TalentCard icon={<Rocket className="h-4 w-4" />} title="Future careers" items={talentProfile.career_paths} render={(x: any) => <><b>{x.title}</b> — {x.tech_link}</>} />
+                  </div>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
           <TabsContent value="progress">
             <div className="glass rounded-3xl p-6">
               {progress.length === 0 ? (
@@ -211,6 +279,19 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
         <div className="text-xs text-muted-foreground">{label}</div>
         <div className="text-2xl font-display font-bold">{value}</div>
       </div>
+    </div>
+  );
+}
+
+function TalentCard({ icon, title, items, render }: { icon: React.ReactNode; title: string; items: any; render: (x: any) => React.ReactNode }) {
+  const arr = Array.isArray(items) ? items : [];
+  return (
+    <div className="bg-card border border-border rounded-2xl p-4">
+      <div className="text-xs uppercase tracking-widest text-accent mb-2 inline-flex items-center gap-2">{icon}{title}</div>
+      <ul className="text-sm space-y-1">
+        {arr.length === 0 && <li className="text-muted-foreground">—</li>}
+        {arr.map((x, i) => <li key={i}>{render(x)}</li>)}
+      </ul>
     </div>
   );
 }
