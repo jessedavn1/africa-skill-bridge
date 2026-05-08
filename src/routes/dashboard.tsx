@@ -106,6 +106,9 @@ function Dashboard() {
         }, { onConflict: "user_id,subject" });
         const { data } = await supabase.from("progress").select("subject,xp,lessons_completed,streak");
         setProgress(data ?? []);
+        await supabase.from("talent_signals").insert({
+          user_id: user.id, category: subjectToCategory(subject), signal_type: "tutor_question", weight: 2,
+        });
       }
     } catch (e: any) {
       toast.error(e.message ?? "Failed to reach AI tutor");
