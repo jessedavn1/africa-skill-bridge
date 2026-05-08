@@ -3,6 +3,7 @@ import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
 import { Features } from "@/components/site/Features";
 import { Subjects } from "@/components/site/Subjects";
+import { Languages } from "@/components/site/Languages";
 import { TutorDemo } from "@/components/site/TutorDemo";
 import { Mission } from "@/components/site/Mission";
 import { Testimonials } from "@/components/site/Testimonials";
@@ -29,6 +30,7 @@ function Index() {
         <Hero />
         <Features />
         <Subjects />
+        <Languages />
         <TutorDemo />
         <Mission />
         <Testimonials />

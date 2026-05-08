@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 import { Header } from "@/components/site/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,17 +53,9 @@ function AuthPage() {
   }
 
   async function handleGoogle() {
-    try {
-      const { lovable } = await import("@/integrations/lovable/index");
-      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: `${window.location.origin}/dashboard` });
-      if (result.error) toast.error(result.error.message);
-    } catch {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: { redirectTo: `${window.location.origin}/dashboard` },
-      });
-      if (error) toast.error(error.message);
-    }
+    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: `${window.location.origin}/dashboard` });
+    if (result.error) toast.error(result.error.message);
+    else if (!result.redirected) navigate({ to: "/dashboard" });
   }
 
   return (
