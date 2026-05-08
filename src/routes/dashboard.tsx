@@ -4,12 +4,13 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
 import { askTutor } from "@/lib/tutor.functions";
+import { analyzeTalents } from "@/lib/talent.functions";
 import { Header } from "@/components/site/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sparkles, Send, User, Flame, Trophy, BookOpen, LogOut } from "lucide-react";
+import { Sparkles, Send, User, Flame, Trophy, BookOpen, LogOut, Lightbulb, Rocket, Award } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard")({
