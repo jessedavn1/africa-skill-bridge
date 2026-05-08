@@ -235,6 +235,7 @@ function Dashboard() {
             </div>
           </TabsContent>
 
+          <TabsContent value="progress">
             <div className="glass rounded-3xl p-6">
               {progress.length === 0 ? (
                 <p className="text-muted-foreground">No progress yet — chat with the tutor to start earning XP.</p>
