@@ -41,6 +41,9 @@ function Dashboard() {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [progress, setProgress] = useState<{ subject: string; xp: number; lessons_completed: number; streak: number }[]>([]);
+  const [talentProfile, setTalentProfile] = useState<any>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+  const analyze = useServerFn(analyzeTalents);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/auth" });
@@ -51,7 +54,37 @@ function Dashboard() {
     supabase.from("progress").select("subject,xp,lessons_completed,streak").then(({ data }) => {
       setProgress(data ?? []);
     });
+    supabase.from("talent_profiles").select("*").eq("user_id", user.id).maybeSingle().then(({ data }) => {
+      setTalentProfile(data);
+    });
   }, [user]);
+
+  function subjectToCategory(s: string): string {
+    const m: Record<string, string> = {
+      Mathematics: "problem_solving", Chemistry: "innovation", Physics: "engineering",
+      Biology: "innovation", "Computer Science": "programming", Languages: "communication", Career: "entrepreneurship",
+    };
+    return m[s] ?? "creativity";
+  }
+
+  async function runAnalysis() {
+    if (!user) return;
+    setAnalyzing(true);
+    try {
+      const { data: signals } = await supabase.from("talent_signals").select("category,weight").eq("user_id", user.id);
+      const result = await analyze({ data: { signals: signals ?? [], language } });
+      await supabase.from("talent_profiles").upsert({
+        user_id: user.id,
+        summary: result.summary ?? null,
+        top_talents: result.top_talents ?? [],
+        growth_areas: result.growth_areas ?? [],
+        career_paths: result.career_paths ?? [],
+      }, { onConflict: "user_id" });
+      const { data } = await supabase.from("talent_profiles").select("*").eq("user_id", user.id).maybeSingle();
+      setTalentProfile(data);
+      toast.success("Talent profile updated");
+    } catch (e: any) { toast.error(e.message); } finally { setAnalyzing(false); }
+  }
 
   async function send() {
     if (!input.trim() || sending) return;
