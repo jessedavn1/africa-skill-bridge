@@ -1,0 +1,216 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { askTutor } from "@/lib/tutor.functions";
+import { Header } from "@/components/site/Header";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Sparkles, Send, User, Flame, Trophy, BookOpen, LogOut } from "lucide-react";
+import { toast } from "sonner";
+
+export const Route = createFileRoute("/dashboard")({
+  head: () => ({
+    meta: [
+      { title: "Dashboard — AkiliAI" },
+      { name: "description", content: "Your personalized AkiliAI learning dashboard with AI tutor, progress, and goals." },
+    ],
+  }),
+  component: Dashboard,
+});
+
+const LANGS = ["English", "Français", "Kiswahili", "Kinyarwanda", "Kirundi", "العربية", "Deutsch", "Español", "isiZulu", "Yorùbá", "Igbo", "Lingala"];
+const SUBJECTS = ["Mathematics", "Chemistry", "Physics", "Biology", "Computer Science", "Languages", "Career"];
+
+type Msg = { role: "user" | "assistant"; content: string };
+
+function Dashboard() {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+  const ask = useServerFn(askTutor);
+
+  const [language, setLanguage] = useState("English");
+  const [subject, setSubject] = useState("Mathematics");
+  const [messages, setMessages] = useState<Msg[]>([
+    { role: "assistant", content: "Hi! I'm Akili. Ask me anything — I'll explain step by step in your language." },
+  ]);
+  const [input, setInput] = useState("");
+  const [sending, setSending] = useState(false);
+  const [progress, setProgress] = useState<{ subject: string; xp: number; lessons_completed: number; streak: number }[]>([]);
+
+  useEffect(() => {
+    if (!loading && !user) navigate({ to: "/auth" });
+  }, [loading, user, navigate]);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("progress").select("subject,xp,lessons_completed,streak").then(({ data }) => {
+      setProgress(data ?? []);
+    });
+  }, [user]);
+
+  async function send() {
+    if (!input.trim() || sending) return;
+    const next: Msg[] = [...messages, { role: "user", content: input }];
+    setMessages(next);
+    setInput("");
+    setSending(true);
+    try {
+      const r = await ask({ data: { messages: next, language, subject } });
+      setMessages([...next, { role: "assistant", content: r.content }]);
+      // bump xp
+      if (user) {
+        const existing = progress.find((p) => p.subject === subject);
+        const xp = (existing?.xp ?? 0) + 10;
+        const lessons = (existing?.lessons_completed ?? 0) + 1;
+        await supabase.from("progress").upsert({
+          user_id: user.id, subject, xp, lessons_completed: lessons,
+          streak: existing?.streak ?? 1,
+        }, { onConflict: "user_id,subject" });
+        const { data } = await supabase.from("progress").select("subject,xp,lessons_completed,streak");
+        setProgress(data ?? []);
+      }
+    } catch (e: any) {
+      toast.error(e.message ?? "Failed to reach AI tutor");
+    } finally { setSending(false); }
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    navigate({ to: "/" });
+  }
+
+  const totalXp = progress.reduce((a, p) => a + p.xp, 0);
+  const totalLessons = progress.reduce((a, p) => a + p.lessons_completed, 0);
+  const maxStreak = progress.reduce((a, p) => Math.max(a, p.streak), 0);
+
+  if (loading || !user) {
+    return <div className="min-h-screen grid place-items-center text-muted-foreground">Loading…</div>;
+  }
+
+  return (
+    <div className="min-h-screen">
+      <Header />
+      <main className="container mx-auto px-4 py-10 space-y-8">
+        <div className="flex items-end justify-between flex-wrap gap-4">
+          <div>
+            <div className="text-sm text-accent uppercase tracking-widest">Dashboard</div>
+            <h1 className="font-display text-3xl sm:text-4xl font-bold">Karibu, {user.email?.split("@")[0]} 👋</h1>
+          </div>
+          <div className="flex gap-2">
+            <Link to="/teacher"><Button variant="outline" className="glass border-primary/30">Teacher tools</Button></Link>
+            <Button variant="ghost" onClick={signOut}><LogOut className="h-4 w-4 mr-2" />Sign out</Button>
+          </div>
+        </div>
+
+        <div className="grid sm:grid-cols-3 gap-4">
+          <StatCard icon={<Trophy className="h-5 w-5 text-accent" />} label="Total XP" value={totalXp} />
+          <StatCard icon={<BookOpen className="h-5 w-5 text-primary" />} label="Lessons" value={totalLessons} />
+          <StatCard icon={<Flame className="h-5 w-5 text-sunset" style={{ color: "var(--sunset)" }} />} label="Best streak" value={maxStreak} />
+        </div>
+
+        <Tabs defaultValue="tutor" className="w-full">
+          <TabsList>
+            <TabsTrigger value="tutor">AI Tutor</TabsTrigger>
+            <TabsTrigger value="progress">Progress</TabsTrigger>
+            <TabsTrigger value="goals">Daily goals</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="tutor">
+            <div className="glass rounded-3xl p-6 space-y-4">
+              <div className="flex flex-wrap gap-3">
+                <Select value={language} onValueChange={setLanguage}>
+                  <SelectTrigger className="w-[180px]"><SelectValue /></SelectTrigger>
+                  <SelectContent>{LANGS.map((l) => <SelectItem key={l} value={l}>{l}</SelectItem>)}</SelectContent>
+                </Select>
+                <Select value={subject} onValueChange={setSubject}>
+                  <SelectTrigger className="w-[200px]"><SelectValue /></SelectTrigger>
+                  <SelectContent>{SUBJECTS.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-3 max-h-[480px] overflow-y-auto pr-2">
+                {messages.map((m, i) => (
+                  <div key={i} className={`flex gap-3 ${m.role === "user" ? "justify-end" : ""}`}>
+                    {m.role === "assistant" && (
+                      <div className="h-8 w-8 rounded-lg bg-gradient-hero grid place-items-center shrink-0">
+                        <Sparkles className="h-4 w-4 text-primary-foreground" />
+                      </div>
+                    )}
+                    <div className={`rounded-2xl px-4 py-3 text-sm max-w-[85%] whitespace-pre-wrap ${m.role === "user" ? "bg-primary/15 border border-primary/20" : "bg-card border border-border"}`}>
+                      {m.content}
+                    </div>
+                    {m.role === "user" && (
+                      <div className="h-8 w-8 rounded-lg bg-secondary grid place-items-center shrink-0">
+                        <User className="h-4 w-4" />
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {sending && <div className="text-xs text-muted-foreground">Akili is thinking…</div>}
+              </div>
+
+              <form onSubmit={(e) => { e.preventDefault(); send(); }} className="flex items-center gap-2 pt-2 border-t border-border">
+                <Input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder={`Ask in ${language}…`}
+                  className="border-0 bg-transparent focus-visible:ring-0"
+                />
+                <Button type="submit" disabled={sending} className="bg-gradient-hero text-primary-foreground border-0">
+                  <Send className="h-4 w-4" />
+                </Button>
+              </form>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="progress">
+            <div className="glass rounded-3xl p-6">
+              {progress.length === 0 ? (
+                <p className="text-muted-foreground">No progress yet — chat with the tutor to start earning XP.</p>
+              ) : (
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {progress.map((p) => (
+                    <div key={p.subject} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
+                      <div>
+                        <div className="font-semibold">{p.subject}</div>
+                        <div className="text-xs text-muted-foreground">{p.lessons_completed} lessons</div>
+                      </div>
+                      <div className="text-2xl font-display font-bold text-gradient">{p.xp} XP</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="goals">
+            <div className="glass rounded-3xl p-6 space-y-3">
+              {["Complete 1 tutor session", "Practice for 15 minutes", "Review yesterday's lesson"].map((g) => (
+                <div key={g} className="flex items-center gap-3 bg-card border border-border rounded-xl p-3">
+                  <span className="h-2 w-2 rounded-full bg-accent" />
+                  <span className="text-sm">{g}</span>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </main>
+    </div>
+  );
+}
+
+function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
+  return (
+    <div className="glass rounded-2xl p-5 flex items-center gap-4">
+      <div className="h-11 w-11 rounded-xl bg-card grid place-items-center">{icon}</div>
+      <div>
+        <div className="text-xs text-muted-foreground">{label}</div>
+        <div className="text-2xl font-display font-bold">{value}</div>
+      </div>
+    </div>
+  );
+}
