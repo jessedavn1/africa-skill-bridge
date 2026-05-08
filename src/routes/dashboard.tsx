@@ -207,7 +207,34 @@ function Dashboard() {
             </div>
           </TabsContent>
 
-          <TabsContent value="progress">
+          <TabsContent value="talents">
+            <div className="glass rounded-3xl p-6 space-y-5">
+              <div className="flex items-end justify-between flex-wrap gap-3">
+                <div>
+                  <h3 className="font-display text-xl font-bold">Your AI talent profile</h3>
+                  <p className="text-xs text-muted-foreground">Built from how you learn, ask, and create. Re-analyze any time.</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">Account ID (share with parent): <span className="font-mono">{user.id}</span></p>
+                </div>
+                <Button onClick={runAnalysis} disabled={analyzing} className="bg-gradient-hero text-primary-foreground border-0">
+                  <Sparkles className="h-4 w-4 mr-2" />{analyzing ? "Analyzing…" : "Analyze my talents"}
+                </Button>
+              </div>
+
+              {!talentProfile && <p className="text-sm text-muted-foreground inline-flex items-center gap-2"><Lightbulb className="h-4 w-4" /> Engage with the tutor and Innovation Hub, then run analysis.</p>}
+
+              {talentProfile && (
+                <div className="space-y-4">
+                  {talentProfile.summary && <p className="italic text-muted-foreground">{talentProfile.summary}</p>}
+                  <div className="grid md:grid-cols-3 gap-3">
+                    <TalentCard icon={<Award className="h-4 w-4" />} title="Top talents" items={talentProfile.top_talents} render={(x: any) => <><b>{x.category}</b> — {x.summary}</>} />
+                    <TalentCard icon={<Lightbulb className="h-4 w-4" />} title="Growth areas" items={talentProfile.growth_areas} render={(x: any) => <><b>{x.category}</b>: {x.why}</>} />
+                    <TalentCard icon={<Rocket className="h-4 w-4" />} title="Future careers" items={talentProfile.career_paths} render={(x: any) => <><b>{x.title}</b> — {x.tech_link}</>} />
+                  </div>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
             <div className="glass rounded-3xl p-6">
               {progress.length === 0 ? (
                 <p className="text-muted-foreground">No progress yet — chat with the tutor to start earning XP.</p>
