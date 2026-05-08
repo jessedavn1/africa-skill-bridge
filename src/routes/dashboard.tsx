@@ -282,3 +282,16 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
     </div>
   );
 }
+
+function TalentCard({ icon, title, items, render }: { icon: React.ReactNode; title: string; items: any; render: (x: any) => React.ReactNode }) {
+  const arr = Array.isArray(items) ? items : [];
+  return (
+    <div className="bg-card border border-border rounded-2xl p-4">
+      <div className="text-xs uppercase tracking-widest text-accent mb-2 inline-flex items-center gap-2">{icon}{title}</div>
+      <ul className="text-sm space-y-1">
+        {arr.length === 0 && <li className="text-muted-foreground">—</li>}
+        {arr.map((x, i) => <li key={i}>{render(x)}</li>)}
+      </ul>
+    </div>
+  );
+}
