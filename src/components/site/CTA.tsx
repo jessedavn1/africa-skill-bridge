@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 
 export function CTA() {
@@ -14,13 +15,17 @@ export function CTA() {
             Join thousands of African learners building practical skills with AI.
           </p>
           <div className="flex flex-wrap gap-3 justify-center mt-8">
-            <Button size="lg" className="bg-background text-foreground hover:bg-background/90 border-0 group">
-              Create free account
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
-            </Button>
-            <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
-              For teachers
-            </Button>
+            <Link to="/auth">
+              <Button size="lg" className="bg-background text-foreground hover:bg-background/90 border-0 group">
+                Create free account
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
+              </Button>
+            </Link>
+            <Link to="/teacher">
+              <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+                For teachers
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

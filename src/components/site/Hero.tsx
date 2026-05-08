@@ -1,4 +1,5 @@
 import { ArrowRight, Globe2, Sparkles } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import heroImg from "@/assets/hero.jpg";
 
@@ -24,14 +25,18 @@ export function Hero() {
           </p>
 
           <div className="flex flex-wrap gap-3">
-            <Button size="lg" className="bg-gradient-hero text-primary-foreground border-0 shadow-warm hover:opacity-95 group">
-              Start learning free
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
-            </Button>
-            <Button size="lg" variant="outline" className="glass border-primary/30">
-              <Globe2 className="mr-2 h-4 w-4" />
-              Try AI Tutor
-            </Button>
+            <Link to="/auth">
+              <Button size="lg" className="bg-gradient-hero text-primary-foreground border-0 shadow-warm hover:opacity-95 group">
+                Start learning free
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
+              </Button>
+            </Link>
+            <a href="#tutor">
+              <Button size="lg" variant="outline" className="glass border-primary/30">
+                <Globe2 className="mr-2 h-4 w-4" />
+                Try AI Tutor
+              </Button>
+            </a>
           </div>
 
           <div className="flex flex-wrap items-center gap-6 pt-4 text-sm text-muted-foreground">

@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 const nav = [
   { label: "Features", href: "#features" },
   { label: "Subjects", href: "#subjects" },
+  { label: "Languages", href: "#languages" },
   { label: "AI Tutor", href: "#tutor" },
-  { label: "Mission", href: "#mission" },
 ];
 
 export function Header() {
@@ -36,10 +36,12 @@ export function Header() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <Button variant="ghost" size="sm">Sign in</Button>
-          <Button size="sm" className="bg-gradient-hero text-primary-foreground hover:opacity-90 border-0 shadow-warm">
-            Start learning
-          </Button>
+          <Link to="/auth"><Button variant="ghost" size="sm">Sign in</Button></Link>
+          <Link to="/dashboard">
+            <Button size="sm" className="bg-gradient-hero text-primary-foreground hover:opacity-90 border-0 shadow-warm">
+              Start learning
+            </Button>
+          </Link>
         </div>
 
         <button onClick={() => setOpen(!open)} className="md:hidden p-2" aria-label="Menu">
@@ -55,8 +57,8 @@ export function Header() {
             </a>
           ))}
           <div className="flex gap-2 pt-2">
-            <Button variant="ghost" size="sm" className="flex-1">Sign in</Button>
-            <Button size="sm" className="flex-1 bg-gradient-hero text-primary-foreground border-0">Start</Button>
+            <Link to="/auth" className="flex-1"><Button variant="ghost" size="sm" className="w-full">Sign in</Button></Link>
+            <Link to="/dashboard" className="flex-1"><Button size="sm" className="w-full bg-gradient-hero text-primary-foreground border-0">Start</Button></Link>
           </div>
         </div>
       )}
