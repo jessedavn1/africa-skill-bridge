@@ -50,12 +50,6 @@ function Dashboard() {
     setMessages((m) => (m.length === 1 && m[0].role === "assistant" ? [{ role: "assistant", content: t("dash.tutor.greeting") }] : m));
   }, [lang]);
 
-  const [input, setInput] = useState("");
-  const [sending, setSending] = useState(false);
-  const [progress, setProgress] = useState<{ subject: string; xp: number; lessons_completed: number; streak: number }[]>([]);
-  const [talentProfile, setTalentProfile] = useState<any>(null);
-  const [analyzing, setAnalyzing] = useState(false);
-  const analyze = useServerFn(analyzeTalents);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/auth" });
