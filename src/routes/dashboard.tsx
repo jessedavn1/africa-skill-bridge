@@ -99,7 +99,7 @@ function Dashboard() {
     setInput("");
     setSending(true);
     try {
-      const r = await ask({ data: { messages: next, language, subject } });
+      const r = await ask({ data: { messages: next, language: lang, subject } });
       setMessages([...next, { role: "assistant", content: r.content }]);
       // bump xp
       if (user) {
