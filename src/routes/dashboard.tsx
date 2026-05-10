@@ -140,37 +140,37 @@ function Dashboard() {
       <main className="container mx-auto px-4 py-10 space-y-8">
         <div className="flex items-end justify-between flex-wrap gap-4">
           <div>
-            <div className="text-sm text-accent uppercase tracking-widest">Dashboard</div>
-            <h1 className="font-display text-3xl sm:text-4xl font-bold">Karibu, {user.email?.split("@")[0]} 👋</h1>
+            <div className="text-sm text-accent uppercase tracking-widest">{t("dash.title")}</div>
+            <h1 className="font-display text-3xl sm:text-4xl font-bold">{t("dash.welcome")}, {user.email?.split("@")[0]} 👋</h1>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <Link to="/innovation"><Button variant="outline" className="glass border-primary/30"><Rocket className="h-4 w-4 mr-2" />Innovation Hub</Button></Link>
-            <Link to="/teacher"><Button variant="outline" className="glass border-primary/30">Teacher tools</Button></Link>
-            <Link to="/parent"><Button variant="outline" className="glass border-primary/30">Parent view</Button></Link>
-            <Button variant="ghost" onClick={signOut}><LogOut className="h-4 w-4 mr-2" />Sign out</Button>
+            <Link to="/innovation"><Button variant="outline" className="glass border-primary/30"><Rocket className="h-4 w-4 mr-2" />{t("dash.innovationHub")}</Button></Link>
+            <Link to="/teacher"><Button variant="outline" className="glass border-primary/30">{t("dash.teacher")}</Button></Link>
+            <Link to="/parent"><Button variant="outline" className="glass border-primary/30">{t("dash.parent")}</Button></Link>
+            <Button variant="ghost" onClick={signOut}><LogOut className="h-4 w-4 mr-2" />{t("dash.signout")}</Button>
           </div>
         </div>
 
         <div className="grid sm:grid-cols-3 gap-4">
-          <StatCard icon={<Trophy className="h-5 w-5 text-accent" />} label="Total XP" value={totalXp} />
-          <StatCard icon={<BookOpen className="h-5 w-5 text-primary" />} label="Lessons" value={totalLessons} />
-          <StatCard icon={<Flame className="h-5 w-5" style={{ color: "var(--sunset)" }} />} label="Best streak" value={maxStreak} />
+          <StatCard icon={<Trophy className="h-5 w-5 text-accent" />} label={t("dash.totalXp")} value={totalXp} />
+          <StatCard icon={<BookOpen className="h-5 w-5 text-primary" />} label={t("dash.lessons")} value={totalLessons} />
+          <StatCard icon={<Flame className="h-5 w-5" style={{ color: "var(--sunset)" }} />} label={t("dash.streak")} value={maxStreak} />
         </div>
 
         <Tabs defaultValue="tutor" className="w-full">
           <TabsList>
-            <TabsTrigger value="tutor">AI Tutor</TabsTrigger>
-            <TabsTrigger value="talents">My Talents</TabsTrigger>
-            <TabsTrigger value="progress">Progress</TabsTrigger>
-            <TabsTrigger value="goals">Daily goals</TabsTrigger>
+            <TabsTrigger value="tutor">{t("dash.tab.tutor")}</TabsTrigger>
+            <TabsTrigger value="talents">{t("dash.tab.talents")}</TabsTrigger>
+            <TabsTrigger value="progress">{t("dash.tab.progress")}</TabsTrigger>
+            <TabsTrigger value="goals">{t("dash.tab.goals")}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="tutor">
             <div className="glass rounded-3xl p-6 space-y-4">
               <div className="flex flex-wrap gap-3">
-                <Select value={language} onValueChange={setLanguage}>
+                <Select value={lang} onValueChange={(v) => setLang(v as LangCode)}>
                   <SelectTrigger className="w-[180px]"><SelectValue /></SelectTrigger>
-                  <SelectContent>{LANGS.map((l) => <SelectItem key={l} value={l}>{l}</SelectItem>)}</SelectContent>
+                  <SelectContent>{LANGUAGES.map((l) => <SelectItem key={l.code} value={l.code}>{l.flag} {l.label}</SelectItem>)}</SelectContent>
                 </Select>
                 <Select value={subject} onValueChange={setSubject}>
                   <SelectTrigger className="w-[200px]"><SelectValue /></SelectTrigger>
@@ -196,14 +196,14 @@ function Dashboard() {
                     )}
                   </div>
                 ))}
-                {sending && <div className="text-xs text-muted-foreground">Akili is thinking…</div>}
+                {sending && <div className="text-xs text-muted-foreground">{t("dash.tutor.thinking")}</div>}
               </div>
 
               <form onSubmit={(e) => { e.preventDefault(); send(); }} className="flex items-center gap-2 pt-2 border-t border-border">
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder={`Ask in ${language}…`}
+                  placeholder={`${t("dash.tutor.placeholder")} ${lang}…`}
                   className="border-0 bg-transparent focus-visible:ring-0"
                 />
                 <Button type="submit" disabled={sending} className="bg-gradient-hero text-primary-foreground border-0">
