@@ -58,7 +58,7 @@ function ParentPage() {
     if (!user || !studentId.trim()) return;
     const { error } = await supabase.from("parent_links").insert({ parent_id: user.id, student_id: studentId.trim() });
     if (error) return toast.error(error.message);
-    setStudentId(""); toast.success("Student linked");
+    setStudentId(""); toast.success(t("parent.linked"));
     load();
   }
 
