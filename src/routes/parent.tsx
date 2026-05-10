@@ -20,6 +20,7 @@ type Progress = { subject: string; xp: number; lessons_completed: number; streak
 type Talent = { user_id: string; summary: string | null; top_talents: any; growth_areas: any; career_paths: any };
 
 function ParentPage() {
+  const { t } = useI18n();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [links, setLinks] = useState<Link[]>([]);
