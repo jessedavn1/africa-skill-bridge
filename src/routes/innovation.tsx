@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Lightbulb, Rocket, Sparkles, Eye, EyeOff } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/innovation")({
   head: () => ({ meta: [{ title: "Innovation Hub — AkiliAI" }, { name: "description", content: "Build, ship, and share student projects with an AI innovation mentor." }] }),
