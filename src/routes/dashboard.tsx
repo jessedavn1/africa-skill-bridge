@@ -88,7 +88,7 @@ function Dashboard() {
       }, { onConflict: "user_id" });
       const { data } = await supabase.from("talent_profiles").select("*").eq("user_id", user.id).maybeSingle();
       setTalentProfile(data);
-      toast.success("Talent profile updated");
+      toast.success(t("dash.talents.updated"));
     } catch (e: any) { toast.error(e.message); } finally { setAnalyzing(false); }
   }
 
