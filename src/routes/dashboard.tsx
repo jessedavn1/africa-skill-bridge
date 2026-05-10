@@ -217,24 +217,24 @@ function Dashboard() {
             <div className="glass rounded-3xl p-6 space-y-5">
               <div className="flex items-end justify-between flex-wrap gap-3">
                 <div>
-                  <h3 className="font-display text-xl font-bold">Your AI talent profile</h3>
-                  <p className="text-xs text-muted-foreground">Built from how you learn, ask, and create. Re-analyze any time.</p>
-                  <p className="text-[10px] text-muted-foreground mt-1">Account ID (share with parent): <span className="font-mono">{user.id}</span></p>
+                  <h3 className="font-display text-xl font-bold">{t("dash.talents.title")}</h3>
+                  <p className="text-xs text-muted-foreground">{t("dash.talents.sub")}</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">{t("dash.talents.account")}: <span className="font-mono">{user.id}</span></p>
                 </div>
                 <Button onClick={runAnalysis} disabled={analyzing} className="bg-gradient-hero text-primary-foreground border-0">
-                  <Sparkles className="h-4 w-4 mr-2" />{analyzing ? "Analyzing…" : "Analyze my talents"}
+                  <Sparkles className="h-4 w-4 mr-2" />{analyzing ? t("dash.talents.analyzing") : t("dash.talents.analyze")}
                 </Button>
               </div>
 
-              {!talentProfile && <p className="text-sm text-muted-foreground inline-flex items-center gap-2"><Lightbulb className="h-4 w-4" /> Engage with the tutor and Innovation Hub, then run analysis.</p>}
+              {!talentProfile && <p className="text-sm text-muted-foreground inline-flex items-center gap-2"><Lightbulb className="h-4 w-4" /> {t("dash.talents.empty")}</p>}
 
               {talentProfile && (
                 <div className="space-y-4">
                   {talentProfile.summary && <p className="italic text-muted-foreground">{talentProfile.summary}</p>}
                   <div className="grid md:grid-cols-3 gap-3">
-                    <TalentCard icon={<Award className="h-4 w-4" />} title="Top talents" items={talentProfile.top_talents} render={(x: any) => <><b>{x.category}</b> — {x.summary}</>} />
-                    <TalentCard icon={<Lightbulb className="h-4 w-4" />} title="Growth areas" items={talentProfile.growth_areas} render={(x: any) => <><b>{x.category}</b>: {x.why}</>} />
-                    <TalentCard icon={<Rocket className="h-4 w-4" />} title="Future careers" items={talentProfile.career_paths} render={(x: any) => <><b>{x.title}</b> — {x.tech_link}</>} />
+                    <TalentCard icon={<Award className="h-4 w-4" />} title={t("dash.talents.top")} items={talentProfile.top_talents} render={(x: any) => <><b>{x.category}</b> — {x.summary}</>} />
+                    <TalentCard icon={<Lightbulb className="h-4 w-4" />} title={t("dash.talents.growth")} items={talentProfile.growth_areas} render={(x: any) => <><b>{x.category}</b>: {x.why}</>} />
+                    <TalentCard icon={<Rocket className="h-4 w-4" />} title={t("dash.talents.careers")} items={talentProfile.career_paths} render={(x: any) => <><b>{x.title}</b> — {x.tech_link}</>} />
                   </div>
                 </div>
               )}
@@ -244,20 +244,31 @@ function Dashboard() {
           <TabsContent value="progress">
             <div className="glass rounded-3xl p-6">
               {progress.length === 0 ? (
-                <p className="text-muted-foreground">No progress yet — chat with the tutor to start earning XP.</p>
+                <p className="text-muted-foreground">{t("dash.progress.empty")}</p>
               ) : (
                 <div className="grid sm:grid-cols-2 gap-3">
                   {progress.map((p) => (
                     <div key={p.subject} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
                       <div>
                         <div className="font-semibold">{p.subject}</div>
-                        <div className="text-xs text-muted-foreground">{p.lessons_completed} lessons</div>
+                        <div className="text-xs text-muted-foreground">{p.lessons_completed} {t("parent.lessons")}</div>
                       </div>
                       <div className="text-2xl font-display font-bold text-gradient">{p.xp} XP</div>
                     </div>
                   ))}
                 </div>
               )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="goals">
+            <div className="glass rounded-3xl p-6 space-y-3">
+              {[t("dash.goals.1"), t("dash.goals.2"), t("dash.goals.3")].map((g) => (
+                <div key={g} className="flex items-center gap-3 bg-card border border-border rounded-xl p-3">
+                  <span className="h-2 w-2 rounded-full bg-accent" />
+                  <span className="text-sm">{g}</span>
+                </div>
+              ))}
             </div>
           </TabsContent>
 
