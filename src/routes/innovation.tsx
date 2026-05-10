@@ -27,6 +27,7 @@ function InnovationPage() {
   const navigate = useNavigate();
   const ideaFn = useServerFn(generateProjectIdea);
   const reviewFn = useServerFn(reviewProject);
+  const { t, lang } = useI18n();
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [publicProjects, setPublicProjects] = useState<Project[]>([]);
