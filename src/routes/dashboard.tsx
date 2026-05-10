@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sparkles, Send, User, Flame, Trophy, BookOpen, LogOut, Lightbulb, Rocket, Award } from "lucide-react";
 import { toast } from "sonner";
+import { useI18n, LANGUAGES, type LangCode } from "@/lib/i18n";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -23,7 +24,6 @@ export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
 });
 
-const LANGS = ["English", "Français", "Kiswahili", "Kinyarwanda", "Kirundi", "العربية", "Deutsch", "Español", "isiZulu", "Yorùbá", "Igbo", "Lingala"];
 const SUBJECTS = ["Mathematics", "Chemistry", "Physics", "Biology", "Computer Science", "Languages", "Career"];
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -32,12 +32,24 @@ function Dashboard() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const ask = useServerFn(askTutor);
+  const { t, lang, setLang } = useI18n();
 
-  const [language, setLanguage] = useState("English");
   const [subject, setSubject] = useState("Mathematics");
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Hi! I'm Akili. Ask me anything — I'll explain step by step in your language." },
+    { role: "assistant", content: t("dash.tutor.greeting") },
   ]);
+  const [input, setInput] = useState("");
+  const [sending, setSending] = useState(false);
+  const [progress, setProgress] = useState<{ subject: string; xp: number; lessons_completed: number; streak: number }[]>([]);
+  const [talentProfile, setTalentProfile] = useState<any>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+  const analyze = useServerFn(analyzeTalents);
+
+  // Re-greet on language change (only if conversation hasn't started)
+  useEffect(() => {
+    setMessages((m) => (m.length === 1 && m[0].role === "assistant" ? [{ role: "assistant", content: t("dash.tutor.greeting") }] : m));
+  }, [lang]);
+
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [progress, setProgress] = useState<{ subject: string; xp: number; lessons_completed: number; streak: number }[]>([]);
