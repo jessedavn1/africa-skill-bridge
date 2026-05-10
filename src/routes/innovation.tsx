@@ -51,7 +51,7 @@ function InnovationPage() {
   async function generate() {
     if (!interest.trim()) return;
     setWorking(true);
-    try { setIdea(await ideaFn({ data: { interest } })); }
+    try { setIdea(await ideaFn({ data: { interest, language: lang } })); }
     catch (e: any) { toast.error(e.message); }
     finally { setWorking(false); }
   }
@@ -63,14 +63,14 @@ function InnovationPage() {
     }).select().single();
     if (error) return toast.error(error.message);
     await supabase.from("talent_signals").insert({ user_id: user.id, category: "innovation", signal_type: "project_built", weight: 5 });
-    setTitle(""); setDesc(""); toast.success("Project created");
+    setTitle(""); setDesc(""); toast.success(t("inno.created"));
     load();
   }
 
   async function aiReview(p: Project) {
     setWorking(true);
     try {
-      const r = await reviewFn({ data: { title: p.title, description: p.description ?? "" } });
+      const r = await reviewFn({ data: { title: p.title, description: p.description ?? "", language: lang } });
       await supabase.from("innovation_projects").update({ ai_feedback: r.content }).eq("id", p.id);
       load();
     } catch (e: any) { toast.error(e.message); } finally { setWorking(false); }
