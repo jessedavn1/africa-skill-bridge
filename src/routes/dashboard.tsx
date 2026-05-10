@@ -78,7 +78,7 @@ function Dashboard() {
     setAnalyzing(true);
     try {
       const { data: signals } = await supabase.from("talent_signals").select("category,weight").eq("user_id", user.id);
-      const result = await analyze({ data: { signals: signals ?? [], language } });
+      const result = await analyze({ data: { signals: signals ?? [], language: lang } });
       await supabase.from("talent_profiles").upsert({
         user_id: user.id,
         summary: result.summary ?? null,
