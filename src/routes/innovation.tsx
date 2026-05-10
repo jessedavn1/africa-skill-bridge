@@ -89,26 +89,26 @@ function InnovationPage() {
       <main className="container mx-auto px-4 py-10 space-y-10">
         <div className="flex justify-between items-end flex-wrap gap-3">
           <div>
-            <div className="text-sm text-accent uppercase tracking-widest">Innovation Hub</div>
-            <h1 className="font-display text-3xl sm:text-4xl font-bold">Turn talent into <span className="text-gradient">traction.</span></h1>
+            <div className="text-sm text-accent uppercase tracking-widest">{t("inno.title")}</div>
+            <h1 className="font-display text-3xl sm:text-4xl font-bold">{t("inno.headline1")} <span className="text-gradient">{t("inno.headline2")}</span></h1>
           </div>
-          <Link to="/dashboard"><Button variant="outline" className="glass">Back to dashboard</Button></Link>
+          <Link to="/dashboard"><Button variant="outline" className="glass">{t("inno.back")}</Button></Link>
         </div>
 
         <section className="glass rounded-3xl p-6 space-y-4">
-          <div className="flex items-center gap-2"><Lightbulb className="h-5 w-5 text-accent" /><h2 className="font-semibold">AI Idea Generator</h2></div>
+          <div className="flex items-center gap-2"><Lightbulb className="h-5 w-5 text-accent" /><h2 className="font-semibold">{t("inno.idea")}</h2></div>
           <div className="flex gap-2">
-            <Input placeholder="What are you passionate about? (e.g. football, fashion, water, music)" value={interest} onChange={(e) => setInterest(e.target.value)} />
+            <Input placeholder={t("inno.ideaPlaceholder")} value={interest} onChange={(e) => setInterest(e.target.value)} />
             <Button onClick={generate} disabled={working} className="bg-gradient-hero text-primary-foreground border-0">
-              <Sparkles className="h-4 w-4 mr-2" /> Spark idea
+              <Sparkles className="h-4 w-4 mr-2" /> {t("inno.spark")}
             </Button>
           </div>
           {idea && (
             <div className="bg-card border border-border rounded-2xl p-5 space-y-2">
               <div className="text-lg font-display font-bold text-gradient">{idea.title}</div>
-              {idea.problem && <p className="text-sm"><b>Problem:</b> {idea.problem}</p>}
-              {idea.solution && <p className="text-sm"><b>Solution:</b> {idea.solution}</p>}
-              {Array.isArray(idea.tech_used) && <p className="text-sm"><b>Tech:</b> {idea.tech_used.join(", ")}</p>}
+              {idea.problem && <p className="text-sm"><b>{t("inno.problem")}:</b> {idea.problem}</p>}
+              {idea.solution && <p className="text-sm"><b>{t("inno.solution")}:</b> {idea.solution}</p>}
+              {Array.isArray(idea.tech_used) && <p className="text-sm"><b>{t("inno.tech")}:</b> {idea.tech_used.join(", ")}</p>}
               {Array.isArray(idea.first_steps) && (
                 <ul className="text-sm list-disc pl-5">{idea.first_steps.map((s: string, i: number) => <li key={i}>{s}</li>)}</ul>
               )}
@@ -118,11 +118,11 @@ function InnovationPage() {
         </section>
 
         <section className="glass rounded-3xl p-6 space-y-4">
-          <div className="flex items-center gap-2"><Rocket className="h-5 w-5 text-primary" /><h2 className="font-semibold">Your projects</h2></div>
+          <div className="flex items-center gap-2"><Rocket className="h-5 w-5 text-primary" /><h2 className="font-semibold">{t("inno.yours")}</h2></div>
           <div className="grid sm:grid-cols-[1fr_1fr_auto] gap-2">
-            <Input placeholder="Project title" value={title} onChange={(e) => setTitle(e.target.value)} />
-            <Input placeholder="Short description" value={desc} onChange={(e) => setDesc(e.target.value)} />
-            <Button onClick={createProject} className="bg-gradient-hero text-primary-foreground border-0">Add</Button>
+            <Input placeholder={t("inno.projTitle")} value={title} onChange={(e) => setTitle(e.target.value)} />
+            <Input placeholder={t("inno.projDesc")} value={desc} onChange={(e) => setDesc(e.target.value)} />
+            <Button onClick={createProject} className="bg-gradient-hero text-primary-foreground border-0">{t("inno.add")}</Button>
           </div>
           <div className="grid md:grid-cols-2 gap-3">
             {projects.map((p) => (
@@ -130,20 +130,20 @@ function InnovationPage() {
                 <div className="flex items-center justify-between">
                   <div className="font-semibold">{p.title}</div>
                   <button onClick={() => togglePublic(p)} className="text-xs text-muted-foreground inline-flex items-center gap-1">
-                    {p.is_public ? <><Eye className="h-3 w-3" /> Public</> : <><EyeOff className="h-3 w-3" /> Private</>}
+                    {p.is_public ? <><Eye className="h-3 w-3" /> {t("inno.public")}</> : <><EyeOff className="h-3 w-3" /> {t("inno.private")}</>}
                   </button>
                 </div>
                 <div className="text-sm text-muted-foreground">{p.description}</div>
                 {p.ai_feedback && <div className="text-xs whitespace-pre-wrap bg-background/40 rounded-lg p-3 border border-border">{p.ai_feedback}</div>}
-                <Button size="sm" variant="outline" onClick={() => aiReview(p)} disabled={working}>Get AI mentor feedback</Button>
+                <Button size="sm" variant="outline" onClick={() => aiReview(p)} disabled={working}>{t("inno.review")}</Button>
               </div>
             ))}
-            {projects.length === 0 && <p className="text-sm text-muted-foreground">No projects yet — add your first idea above.</p>}
+            {projects.length === 0 && <p className="text-sm text-muted-foreground">{t("inno.empty")}</p>}
           </div>
         </section>
 
         <section className="space-y-3">
-          <h2 className="font-semibold">Community projects</h2>
+          <h2 className="font-semibold">{t("inno.community")}</h2>
           <div className="grid md:grid-cols-3 gap-3">
             {publicProjects.map((p) => (
               <div key={p.id} className="glass rounded-2xl p-4">
@@ -151,7 +151,7 @@ function InnovationPage() {
                 <div className="text-xs text-muted-foreground mt-1">{p.description}</div>
               </div>
             ))}
-            {publicProjects.length === 0 && <p className="text-sm text-muted-foreground">Be the first to publish a project.</p>}
+            {publicProjects.length === 0 && <p className="text-sm text-muted-foreground">{t("inno.communityEmpty")}</p>}
           </div>
         </section>
       </main>
