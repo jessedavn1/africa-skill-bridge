@@ -69,25 +69,25 @@ function ParentPage() {
       <Header />
       <main className="container mx-auto px-4 py-10 space-y-8">
         <div>
-          <div className="text-sm text-accent uppercase tracking-widest">Parent insights</div>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold">What is your child <span className="text-gradient">naturally gifted at?</span></h1>
+          <div className="text-sm text-accent uppercase tracking-widest">{t("parent.title")}</div>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold">{t("parent.headline1")} <span className="text-gradient">{t("parent.headline2")}</span></h1>
         </div>
 
         <div className="glass rounded-3xl p-6 space-y-3">
-          <div className="text-sm font-semibold flex items-center gap-2"><Heart className="h-4 w-4 text-accent" /> Link a student</div>
-          <p className="text-xs text-muted-foreground">Ask your child to share their AkiliAI account ID (visible in their dashboard URL or profile).</p>
+          <div className="text-sm font-semibold flex items-center gap-2"><Heart className="h-4 w-4 text-accent" /> {t("parent.link")}</div>
+          <p className="text-xs text-muted-foreground">{t("parent.linkHint")}</p>
           <div className="flex gap-2">
-            <Input placeholder="Student account ID (UUID)" value={studentId} onChange={(e) => setStudentId(e.target.value)} />
-            <Button onClick={linkStudent} className="bg-gradient-hero text-primary-foreground border-0">Link</Button>
+            <Input placeholder={t("parent.idPlaceholder")} value={studentId} onChange={(e) => setStudentId(e.target.value)} />
+            <Button onClick={linkStudent} className="bg-gradient-hero text-primary-foreground border-0">{t("parent.linkBtn")}</Button>
           </div>
         </div>
 
         {links.length === 0 ? (
-          <p className="text-muted-foreground">No students linked yet.</p>
+          <p className="text-muted-foreground">{t("parent.none")}</p>
         ) : (
           <div className="space-y-6">
             {links.map((l) => {
-              const t = talents[l.student_id];
+              const tp = talents[l.student_id];
               const studentProgress = progress.filter((p) => p.user_id === l.student_id);
               const xp = studentProgress.reduce((a, p) => a + p.xp, 0);
               const lessons = studentProgress.reduce((a, p) => a + p.lessons_completed, 0);
@@ -97,22 +97,22 @@ function ParentPage() {
                   <div className="flex items-end justify-between flex-wrap gap-2">
                     <h2 className="font-display text-2xl font-bold">{name}</h2>
                     <div className="flex gap-3 text-sm">
-                      <span className="inline-flex items-center gap-1"><Trophy className="h-4 w-4 text-accent" /> {xp} XP</span>
-                      <span className="inline-flex items-center gap-1"><BookOpen className="h-4 w-4 text-primary" /> {lessons} lessons</span>
+                      <span className="inline-flex items-center gap-1"><Trophy className="h-4 w-4 text-accent" /> {xp} {t("parent.xp")}</span>
+                      <span className="inline-flex items-center gap-1"><BookOpen className="h-4 w-4 text-primary" /> {lessons} {t("parent.lessons")}</span>
                     </div>
                   </div>
 
-                  {t?.summary ? (
+                  {tp?.summary ? (
                     <div className="space-y-3">
-                      <div className="text-sm text-muted-foreground italic">{t.summary}</div>
+                      <div className="text-sm text-muted-foreground italic">{tp.summary}</div>
                       <div className="grid md:grid-cols-3 gap-3">
-                        <Card title="Top talents" items={t.top_talents} render={(x: any) => `${x.category} — ${x.summary ?? ""}`} />
-                        <Card title="Growth areas" items={t.growth_areas} render={(x: any) => `${x.category}: ${x.why ?? ""}`} />
-                        <Card title="Career paths" items={t.career_paths} render={(x: any) => `${x.title} — ${x.tech_link ?? ""}`} />
+                        <Card title={t("parent.top")} items={tp.top_talents} render={(x: any) => `${x.category} — ${x.summary ?? ""}`} />
+                        <Card title={t("parent.growth")} items={tp.growth_areas} render={(x: any) => `${x.category}: ${x.why ?? ""}`} />
+                        <Card title={t("parent.careers")} items={tp.career_paths} render={(x: any) => `${x.title} — ${x.tech_link ?? ""}`} />
                       </div>
                     </div>
                   ) : (
-                    <p className="text-sm text-muted-foreground inline-flex items-center gap-2"><Sparkles className="h-4 w-4" /> Talent profile builds as your child engages with the platform.</p>
+                    <p className="text-sm text-muted-foreground inline-flex items-center gap-2"><Sparkles className="h-4 w-4" /> {t("parent.building")}</p>
                   )}
                 </div>
               );
