@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Heart, Trophy, BookOpen, Sparkles } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/parent")({
   head: () => ({ meta: [{ title: "Parent Insights — AkiliAI" }, { name: "description", content: "Discover your child's natural talents and growth journey." }] }),
