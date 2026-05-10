@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 
 import { Toaster } from "@/components/ui/sonner";
+import { I18nProvider } from "@/lib/i18n";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -114,8 +115,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
-      <Toaster richColors position="top-right" />
+      <I18nProvider>
+        <Outlet />
+        <Toaster richColors position="top-right" />
+      </I18nProvider>
     </QueryClientProvider>
   );
 }
