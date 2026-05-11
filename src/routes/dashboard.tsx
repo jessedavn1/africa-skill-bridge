@@ -46,9 +46,16 @@ function Dashboard() {
   const ask = useServerFn(askTutor);
   const { t, lang, setLang } = useI18n();
 
-  const [subject, setSubject] = useState("Mathematics");
+  const search = useSearch({ from: "/dashboard" });
+  const initialSubject = useMemo(() => {
+    const s = search.subject;
+    return s && SUBJECTS.includes(s) ? s : "Mathematics";
+  }, [search.subject]);
+
+  const [subject, setSubject] = useState(initialSubject);
+  const greetingFor = (s: string) => SUBJECT_INTROS[s] ?? t("dash.tutor.greeting");
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: t("dash.tutor.greeting") },
+    { role: "assistant", content: greetingFor(initialSubject) },
   ]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
@@ -57,10 +64,11 @@ function Dashboard() {
   const [analyzing, setAnalyzing] = useState(false);
   const analyze = useServerFn(analyzeTalents);
 
-  // Re-greet on language change (only if conversation hasn't started)
+  // Re-greet when language or subject changes (only if conversation hasn't progressed)
   useEffect(() => {
-    setMessages((m) => (m.length === 1 && m[0].role === "assistant" ? [{ role: "assistant", content: t("dash.tutor.greeting") }] : m));
-  }, [lang]);
+    setMessages((m) => (m.length <= 1 ? [{ role: "assistant", content: greetingFor(subject) }] : m));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang, subject]);
 
 
   useEffect(() => {
