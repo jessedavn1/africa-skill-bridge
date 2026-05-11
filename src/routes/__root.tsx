@@ -10,6 +10,7 @@ import {
 
 import { Toaster } from "@/components/ui/sonner";
 import { I18nProvider } from "@/lib/i18n";
+import { AutoI18nProvider } from "@/lib/auto-i18n";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
