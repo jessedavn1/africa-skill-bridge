@@ -1,6 +1,7 @@
 import { ArrowRight, Globe2, Sparkles } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
+import { T } from "@/lib/auto-i18n";
 import heroImg from "@/assets/hero.jpg";
 
 export function Hero() {
@@ -11,30 +12,30 @@ export function Hero() {
         <div className="space-y-8">
           <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs">
             <Sparkles className="h-3.5 w-3.5 text-accent" />
-            <span className="text-muted-foreground">AI-powered learning, built for Africa</span>
+            <span className="text-muted-foreground"><T>AI-powered learning, built for Africa</T></span>
           </div>
 
           <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight">
-            Learn smarter.
+            <T>Learn smarter.</T>
             <br />
-            <span className="text-gradient">Build the future.</span>
+            <span className="text-gradient"><T>Build the future.</T></span>
           </h1>
 
           <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
-            A multilingual AI tutor that bridges theory and practice — turning lessons into real-world skills for every African learner. From algebra to agriculture, from chemistry to careers.
+            <T>A multilingual AI tutor that bridges theory and practice — turning lessons into real-world skills for every African learner. From algebra to agriculture, from chemistry to careers.</T>
           </p>
 
           <div className="flex flex-wrap gap-3">
             <Link to="/auth">
               <Button size="lg" className="bg-gradient-hero text-primary-foreground border-0 shadow-warm hover:opacity-95 group">
-                Start learning free
+                <T>Start learning free</T>
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
               </Button>
             </Link>
             <a href="#tutor">
               <Button size="lg" variant="outline" className="glass border-primary/30">
                 <Globe2 className="mr-2 h-4 w-4" />
-                Try AI Tutor
+                <T>Try AI Tutor</T>
               </Button>
             </a>
           </div>
@@ -60,12 +61,12 @@ export function Hero() {
           </div>
 
           <div className="absolute -bottom-6 -left-6 glass rounded-2xl p-4 max-w-[220px] hidden sm:block">
-            <div className="text-xs text-muted-foreground mb-1">AI Tutor</div>
-            <div className="text-sm">"Let's break this equation into 3 simple steps..."</div>
+            <div className="text-xs text-muted-foreground mb-1"><T>AI Tutor</T></div>
+            <div className="text-sm"><T>"Let's break this equation into 3 simple steps..."</T></div>
           </div>
           <div className="absolute -top-6 -right-6 glass rounded-2xl p-4 hidden sm:block">
             <div className="text-2xl font-bold text-gradient">+12k</div>
-            <div className="text-xs text-muted-foreground">learners thriving</div>
+            <div className="text-xs text-muted-foreground"><T>learners thriving</T></div>
           </div>
         </div>
       </div>
