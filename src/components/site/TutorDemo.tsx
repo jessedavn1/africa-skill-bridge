@@ -1,4 +1,5 @@
 import { Send, Sparkles, User } from "lucide-react";
+import { T } from "@/lib/auto-i18n";
 
 const messages = [
   { role: "user", text: "Explain photosynthesis like I'm 12, in Swahili." },
@@ -12,13 +13,13 @@ export function TutorDemo() {
     <section id="tutor" className="container mx-auto px-4 sm:px-6 py-24">
       <div className="grid lg:grid-cols-2 gap-12 items-center">
         <div className="space-y-6">
-          <div className="text-sm text-accent font-medium uppercase tracking-widest">AI Tutor</div>
+          <div className="text-sm text-accent font-medium uppercase tracking-widest"><T>AI Tutor</T></div>
           <h2 className="font-display text-4xl sm:text-5xl font-bold leading-tight">
-            A patient teacher,<br />
-            <span className="text-gradient">in your language</span>
+            <T>A patient teacher,</T><br />
+            <span className="text-gradient"><T>in your language</T></span>
           </h2>
           <p className="text-lg text-muted-foreground leading-relaxed">
-            Ask anything in English, French, or Swahili. Akili adapts to your level, encourages curiosity, and connects every concept to the world around you.
+            <T>Ask anything in English, French, or Swahili. Akili adapts to your level, encourages curiosity, and connects every concept to the world around you.</T>
           </p>
           <ul className="space-y-3 text-sm">
             {[
@@ -29,7 +30,7 @@ export function TutorDemo() {
             ].map((item) => (
               <li key={item} className="flex items-center gap-3">
                 <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                <span className="text-muted-foreground">{item}</span>
+                <span className="text-muted-foreground"><T>{item}</T></span>
               </li>
             ))}
           </ul>
@@ -50,7 +51,7 @@ export function TutorDemo() {
                     ? "bg-primary/15 text-foreground border border-primary/20"
                     : "bg-card border border-border"
                 }`}>
-                  {m.text}
+                  {m.role === "user" ? <T>{m.text}</T> : m.text}
                 </div>
                 {m.role === "user" && (
                   <div className="h-8 w-8 rounded-lg bg-secondary grid place-items-center shrink-0">

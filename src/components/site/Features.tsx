@@ -1,4 +1,5 @@
 import { Brain, Languages, FlaskConical, Compass, GraduationCap, Wifi } from "lucide-react";
+import { T } from "@/lib/auto-i18n";
 
 const features = [
   {
@@ -37,14 +38,14 @@ export function Features() {
   return (
     <section id="features" className="container mx-auto px-4 sm:px-6 py-24">
       <div className="max-w-2xl mb-16">
-        <div className="text-sm text-accent font-medium mb-3 uppercase tracking-widest">Core capabilities</div>
+        <div className="text-sm text-accent font-medium mb-3 uppercase tracking-widest"><T>Core capabilities</T></div>
         <h2 className="font-display text-4xl sm:text-5xl font-bold">
-          A complete learning <span className="text-gradient">ecosystem</span>
+          <T>A complete learning</T> <span className="text-gradient"><T>ecosystem</T></span>
         </h2>
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {features.map((f, i) => (
+        {features.map((f) => (
           <div
             key={f.title}
             className="group relative bg-gradient-card rounded-2xl p-6 border border-border hover:border-primary/40 transition-all hover:-translate-y-1"
@@ -54,8 +55,8 @@ export function Features() {
               <div className="h-12 w-12 rounded-xl glass grid place-items-center mb-5 group-hover:scale-110 transition">
                 <f.icon className="h-5 w-5 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">{f.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+              <h3 className="text-lg font-semibold mb-2"><T>{f.title}</T></h3>
+              <p className="text-sm text-muted-foreground leading-relaxed"><T>{f.desc}</T></p>
             </div>
           </div>
         ))}

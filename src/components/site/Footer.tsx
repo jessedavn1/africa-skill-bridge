@@ -1,4 +1,5 @@
 import { Sparkles } from "lucide-react";
+import { T } from "@/lib/auto-i18n";
 
 export function Footer() {
   return (
@@ -12,7 +13,7 @@ export function Footer() {
             <span className="font-display text-lg font-bold">Akili<span className="text-gradient">AI</span></span>
           </div>
           <p className="text-sm text-muted-foreground mt-4 leading-relaxed">
-            Multilingual AI learning, built in Africa, for Africa.
+            <T>Multilingual AI learning, built in Africa, for Africa.</T>
           </p>
         </div>
 
@@ -22,15 +23,15 @@ export function Footer() {
           { title: "Languages", items: ["English · Français", "Kiswahili · Kinyarwanda", "Kirundi · Lingala", "Yorùbá · isiZulu · Igbo"] },
         ].map((col) => (
           <div key={col.title}>
-            <div className="text-sm font-semibold mb-4">{col.title}</div>
+            <div className="text-sm font-semibold mb-4"><T>{col.title}</T></div>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              {col.items.map((i) => <li key={i} className="hover:text-foreground transition cursor-pointer">{i}</li>)}
+              {col.items.map((i) => <li key={i} className="hover:text-foreground transition cursor-pointer"><T>{i}</T></li>)}
             </ul>
           </div>
         ))}
       </div>
       <div className="border-t border-border/50 py-6 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} AkiliAI · Empowering African learners
+        © {new Date().getFullYear()} AkiliAI · <T>Empowering African learners</T>
       </div>
     </footer>
   );

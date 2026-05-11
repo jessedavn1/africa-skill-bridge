@@ -1,3 +1,5 @@
+import { T } from "@/lib/auto-i18n";
+
 const languages = [
   { name: "English", native: "Hello", flag: "🇬🇧" },
   { name: "Français", native: "Bonjour", flag: "🇫🇷" },
@@ -17,12 +19,12 @@ export function Languages() {
   return (
     <section id="languages" className="container mx-auto px-4 sm:px-6 py-24">
       <div className="text-center max-w-2xl mx-auto mb-14">
-        <div className="text-sm text-accent font-medium mb-3 uppercase tracking-widest">Multilingual</div>
+        <div className="text-sm text-accent font-medium mb-3 uppercase tracking-widest"><T>Multilingual</T></div>
         <h2 className="font-display text-4xl sm:text-5xl font-bold">
-          Learn in the language <span className="text-gradient">you think in</span>
+          <T>Learn in the language</T> <span className="text-gradient"><T>you think in</T></span>
         </h2>
         <p className="text-muted-foreground mt-4">
-          12 languages — from across Africa, Europe and the Arab world. Switch anytime, mid-sentence.
+          <T>12 languages — from across Africa, Europe and the Arab world. Switch anytime, mid-sentence.</T>
         </p>
       </div>
 
